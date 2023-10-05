@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>掷骰子游戏</title>
+    <!-- 引入css文件 -->
+    <link rel="stylesheet" href="dice-game.css">
+</head>
+<body>
+    <h1>掷骰子游戏</h1>
+    <!-- 游戏开始界面 -->
+    <div id="scene-startgame">
+        <p>这是初始界面</p >
+        <button id="start">开始游戏</button>
+    </div>
+    <!-- 规则介绍界面 -->
+    <div id="scene-gamerule">
+        <p>这是游戏规则介绍</p >
+        <button id="understand">我已经懂了</button>
+    </div>
+    <!-- 游戏设置区域 -->
+    <div id="setting-div">
+        <label for="mode-select">请选择游戏模式：</label>
+        <select id="mode-select">
+            <option value="">请选择</option>
+            <option value="单人">单人</option>
+            <option value="多人">多人</option>
+        </select>
+        <br>
+        <label for="player-input" style="display: none;">请输入玩家个数（2~4）：</label>
+        <input id="player-input" style="display: none;" type="text" max="4">
+        <br>
+        <label for="count-input">请输入游戏局数：</label>
+        <input id="count-input" type="number" min="1" value="1">
+        <br>
+        <label for="chips-input">请输入玩家筹码数：</label>
+        <input id="chips-input" type="number" min="1" value="100">
+        <br>
+        <button id="start-button">开始游戏</button>
+    </div>
+    <!-- 游戏区域 -->
+    <div id="game-div" style="display: none;">
+        <!-- 当前轮数 -->
+        <div id="round-div"></div>
+        <!-- 当前玩家 -->
+        <div id="player-div"></div>
+        <!-- 当前玩家的筹码数 -->
+        <div id="chips-div"></div>
+        <!-- 当前玩家的骰子区域 -->
+        <div id="dice-div">
+            <!-- 五个骰子元素，初始为空，并添加onclick属性 -->
+            <span onclick="toggleSelect(this)"></span>
+            <span onclick="toggleSelect(this)"></span>
+            <span onclick="toggleSelect(this)"></span>
+            <span onclick="toggleSelect(this)"></span>
+            <span onclick="toggleSelect(this)"></span>
+        </div>
+        <!-- 投掷骰子按钮 -->
+        <button id="roll-button">投掷骰子</button>
+        <!-- 锁定骰子按钮 -->
+        <button id="lock-button">锁定骰子</button>
+        <!-- 倍率选择框 -->
+        <select id="multiplier-select" style="display: none;">
+            <option value="0">请选择倍率（默认为0）</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+        <!-- 确认倍率按钮 -->
+        <button id="confirm-button" style="display: none;">确认倍率</button>
+    </div>
+
+    <!-- 骰子结果储存区域 -->
+    <div id="dives-div" style="display: none;"><h2>骰子结果显示区域：</h2></div>
+    
+    <!-- 结果区域 -->
+    <div id="result-div" style="display: none;"></div>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="dice-game.js"></script>
+
+    <!-- 定义一个函数，用来切换骰子元素的选中状态 -->
+    <script>
+      function toggleSelect(element) {
+          // 如果骰子元素有selected类名，那么移除它，否则添加它
+          if (element.classList.contains("selected")) {
+              element.classList.remove("selected");
+          } else {
+              element.classList.add("selected");
+          }
+      }
+    </script>
+</body>
+</html>
