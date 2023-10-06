@@ -13,6 +13,7 @@ let roundCount = 0; // 当前局的轮数
 let playerCount = 0; // 玩家个数
 let currentPlayer = 0; // 当前玩家的索引，从0开始
 let players = []; // 玩家数组，每个元素是一个对象，包含name, chips, dice, locked, score, bonus, multiplier等属性
+let totalMultiplier = 0; //总倍率，初始为0
 let gameOver = false; // 游戏是否结束的标志
 
 // 定义一些DOM元素的引用，方便操作
@@ -27,12 +28,18 @@ let roundDiv = document.getElementById("round-div"); // 当前轮数的div元素
 let playerDiv = document.getElementById("player-div"); // 当前玩家的div元素
 let chipsDiv = document.getElementById("chips-div"); // 当前玩家的筹码div元素
 let diceDiv = document.getElementById("dice-div"); // 当前玩家的骰子div元素
+let MagnificationsDiv = document.getElementById("Magnifications-div"); // 当前倍率
 let lockButton = document.getElementById("lock-button"); // 锁定骰子按钮
 let rollButton = document.getElementById("roll-button"); // 投掷骰子按钮
-let multiplierSelect = document.getElementById("multiplier-select"); // 倍率选择框
+let nextButton = document.getElementById("next-button"); // 下一位玩家按钮
+let multiplierSelect1 = document.getElementById("multiplier-select1"); // 玩家1倍率选择框
+let multiplierSelect2 = document.getElementById("multiplier-select2"); // 玩家2倍率选择框
+let multiplierSelect3 = document.getElementById("multiplier-select3"); // 玩家3倍率选择框
+let multiplierSelect4 = document.getElementById("multiplier-select4"); // 玩家4倍率选择框
 let confirmButton = document.getElementById("confirm-button"); // 确认倍率按钮
 let resultDiv = document.getElementById("result-div"); // 结果区域的div元素
 let divesDiv = document.getElementById("dives-div"); // 存储骰子区域的div元素
+let chooseDiv = document.getElementById("choose-div"); // 选择倍率区域的div元素
 
 //这是界面切换
 let settingDiv = document.getElementById("setting-div");
@@ -92,7 +99,6 @@ function getPlayers() {
     }
 }
 
-
 // 创建一个span元素来显示错误信息，并添加到HTML中
 let errorSpan = document.createElement("span");
 errorSpan.id = "error-span";
@@ -138,6 +144,10 @@ confirmButton.addEventListener("click", function() {
     confirmMultiplier(); // 确认倍率
 });
 
+nextButton.addEventListener("click", function() {
+    switchPlayer(); // 下一位玩家
+});
+
 // 定义一些函数，实现游戏的逻辑
 
 // 初始化游戏
@@ -146,6 +156,7 @@ function initGame(initialChips) {
     document.getElementById("setting-div").style.display = "none";
     gameDiv.style.display = "block";
     divesDiv.style.display = "block";
+    chooseDiv.style.display = "block";
 
     // 初始化玩家数组
     players = [];
@@ -161,7 +172,6 @@ function initGame(initialChips) {
         player.locked = []; // 设置玩家的锁定数组，初始为空，用来记录哪些骰子被锁定了
         player.score = 0; // 设置玩家的得分，初始为0
         player.bonus = -1; // 设置玩家的奖励类型，初始为-1，表示没有奖励
-        player.multiplier = 0; // 设置玩家的倍率，初始为0
         players.push(player); // 将玩家对象添加到玩家数组中
     }
 
@@ -174,6 +184,7 @@ function startGame() {
     gameOver = false; // 设置游戏结束标志为false
     roundCount = 1; // 设置当前轮数为0
     currentPlayer = 0; // 设置当前玩家为第一个玩家
+    totalMultiplier = 1; //设置当前倍率为1
 
     // 遍历每个玩家，重置他们的骰子数组，锁定数组，得分，奖励类型和倍率
     for (let player of players) {
@@ -181,7 +192,6 @@ function startGame() {
         player.locked = [];
         player.score = 0;
         player.bonus = -1;
-        player.multiplier = 0;
     }
 
     // 更新界面上的信息
@@ -189,23 +199,24 @@ function startGame() {
 
     // 开始第一轮投掷骰子
     startRound();
-    lockButton.style.display = "none";
+    lockButton.style.display = "none";       //游戏开始时隐藏锁定按钮和下一位玩家按钮
+    nextButton.style.display = "none";
+    if(playerCount >= 3){             //当玩家数为3时出现第三个倍率选择框
+        multiplierSelect3.style.display = "inline";
+    }
+    if(playerCount == 4){             //当玩家数为4时出现第四个倍率选择框
+        multiplierSelect4.style.display = "inline";
+    }
 }
 
 // 开始一轮投掷骰子
 function startRound() {
 
+
     // 更新界面上的信息
     updateUI();
-
-// 如果当前轮数小于最大轮数，那么显示锁定骰子按钮和投掷骰子按钮，否则隐藏它们
-    if (roundCount < MAX_ROUNDS +1) {
-        lockButton.style.display = "inline";
-        rollButton.style.display = "inline";
-    } else {
-        lockButton.style.display = "none";
-        rollButton.style.display = "none";
-    }
+    lockButton.style.display = "none";
+    rollButton.style.display = ("inline");
 
     // 如果当前玩家是电脑玩家，那么调用电脑玩家的逻辑函数
     if (players[currentPlayer].name === "电脑") {
@@ -230,14 +241,6 @@ function lockDice() {
     // 更新界面上的信息
     updateUI();
 
-    // 如果当前轮数小于最大轮数，那么显示倍率选择框和确认倍率按钮，否则隐藏它们
-    if (roundCount < MAX_ROUNDS + 1) {
-        multiplierSelect.style.display = "inline";
-        confirmButton.style.display = "inline";
-    } else {
-        multiplierSelect.style.display = "none";
-        confirmButton.style.display = "none";
-    }
 }
 
 // 投掷骰子
@@ -265,31 +268,43 @@ function rollDice() {
     divesDiv.innerHTML += "<p>"+players[currentPlayer].name+"第"+roundCount+"轮"+str1+str2+str3+str4+str5+"</p>";
     updateUI();
 
-    // 如果当前轮数小于最大轮数，那么显示倍率选择框和确认倍率按钮，否则隐藏它们
-    if (roundCount < MAX_ROUNDS + 1) {
-        multiplierSelect.style.display = "inline";
+    lockButton.style.display = "inline";      //显示锁定骰子按钮
+    if (currentPlayer !== playerCount - 1) {
+        nextButton.style.display = "inline";      //显示下一位玩家按钮
+    } else{
         confirmButton.style.display = "inline";
-    } else {
-        multiplierSelect.style.display = "none";
-        confirmButton.style.display = "none";
     }
-    lockButton.style.display = "inline";
-    rollButton.style.display = "none";
+    rollButton.style.display = "none";      //隐藏投掷骰子按钮
 }
 
 // 确认倍率
 function confirmMultiplier() {
     // 获取用户选择的倍率，并更新当前玩家的倍率属性
-    let multiplier = multiplierSelect.value;
+    let multiplier = parseInt(multiplierSelect1.value) + parseInt(multiplierSelect2.value) + parseInt(multiplierSelect3.value) + parseInt(multiplierSelect4.value);
     multiplier = parseInt(multiplier);
-    players[currentPlayer].multiplier = multiplier;
+    totalMultiplier += multiplier;
 
-    // 隐藏倍率选择框和确认倍率按钮
-    multiplierSelect.style.display = "none";
+    //确认倍率按钮
     confirmButton.style.display = "none";
-
-    // 切换到下一个玩家
-    switchPlayer();
+    divesDiv.innerHTML="<h2>骰子结果显示区域：</h2>"
+    // 如果当前轮数小于最大轮数，那么开始下一轮投掷骰子，否则计算结果
+    currentPlayer = 0; // 重置当前玩家的索引为0
+    if (roundCount < MAX_ROUNDS) {
+        roundCount++; // 增加当前轮数
+        if(roundCount == 3){
+            chooseDiv.style.display = "none"
+            multiplierSelect1.value = 0
+            multiplierSelect2.value = 0
+            multiplierSelect3.value = 0
+            multiplierSelect4.value = 0
+        }
+        startRound();
+    } else {
+        roundCount++; // 增加当前轮数
+        lockButton.style.display = "none";
+        calculate();
+        showResult();
+    }
 }
 
 // 切换到下一个玩家
@@ -297,24 +312,12 @@ function switchPlayer() {
     currentPlayer++; // 增加当前玩家的索引
 
     // 如果当前玩家的索引等于玩家个数，说明一轮投掷结束了，那么判断是否需要进行下一轮或者计算结果
-    if (currentPlayer === playerCount) {
-        currentPlayer = 0; // 重置当前玩家的索引为0
-
-        // 如果当前轮数小于最大轮数，那么开始下一轮投掷骰子，否则计算结果
-        if (roundCount < MAX_ROUNDS) {
-            roundCount++; // 增加当前轮数
-            startRound();
-        } else {
-            roundCount++; // 增加当前轮数
-            calculate();
-            showResult();
-        }
-    } else {
-        // 否则，更新界面上的信息，并开始当前玩家的投掷骰子
+    if (currentPlayer !== playerCount) {
         updateUI();
         startRound();
-    }
+    } 
     lockButton.style.display = "none";
+    nextButton.style.display = "none";
 }
 
 // 更新界面上的信息
@@ -322,6 +325,7 @@ function updateUI() {
     roundDiv.textContent = "第" + roundCount + "轮"; // 显示当前轮数
     playerDiv.textContent = "当前玩家：" + players[currentPlayer].name; // 显示当前玩家的姓名
     chipsDiv.textContent = "筹码数：" + players[currentPlayer].chips; // 显示当前玩家的筹码数
+    MagnificationsDiv.textContent = "当前倍率：" + totalMultiplier;
 
     // 获取当前玩家的骰子数组和锁定数组
     let dice = players[currentPlayer].dice;
@@ -347,7 +351,6 @@ function updateUI() {
         }
     }
 }
-
 
 // 计算所有玩家当前得分
 function calculate() {
@@ -408,15 +411,8 @@ function calculate() {
         player.score = score + BONUS_SCORES[bonus];
     }
 }
-// 计算总倍率
-function calculateMultiplier() {
-    // 计算总倍率，即所有玩家的倍率之和
-    let totalMultiplier = 1;
-    for (let player of players) {
-        totalMultiplier += player.multiplier;
-    }
-    return totalMultiplier;
-}
+
+
 // 显示游戏结果
 function showResult() {
 
@@ -430,7 +426,6 @@ function showResult() {
         }
     }
     
-    totalMultiplier = calculateMultiplier();
     // 遍历每个玩家，更新他们的筹码数，并判断是否有玩家被击飞或者赢得游戏
     var chipsadd = 0;
     for (let player of players) {

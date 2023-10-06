@@ -46,6 +46,8 @@
         <div id="player-div"></div>
         <!-- 当前玩家的筹码数 -->
         <div id="chips-div"></div>
+        <!-- 当前倍率 -->
+        <div id="Magnifications-div"></div>
         <!-- 当前玩家的骰子区域 -->
         <div id="dice-div">
             <!-- 五个骰子元素，初始为空，并添加onclick属性 -->
@@ -59,26 +61,59 @@
         <button id="roll-button">投掷骰子</button>
         <!-- 锁定骰子按钮 -->
         <button id="lock-button">锁定骰子</button>
-        <!-- 倍率选择框 -->
-        <select id="multiplier-select" style="display: none;">
-            <option value="0">请选择倍率（默认为0）</option>
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-        </select>
+        <!-- 下一位玩家按钮 -->
+        <button id="next-button">下一位玩家</button>
         <!-- 确认倍率按钮 -->
         <button id="confirm-button" style="display: none;">确认倍率</button>
     </div>
 
     <!-- 骰子结果储存区域 -->
     <div id="dives-div" style="display: none;"><h2>骰子结果显示区域：</h2></div>
+
+    <!-- 倍率选择区域区域 -->
+    <div id="choose-div" style="display: none;">
+        <!-- 倍率选择框 -->
+        <p>玩家一选择倍率：</p>
+        <select id="multiplier-select1" style="display: inline;">
+            <option value="0">请选择倍率（默认为0）</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+        <p>玩家二选择倍率：</p>
+        <select id="multiplier-select2" style="display: inline;">
+            <option value="0">请选择倍率（默认为0）</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+        <p>玩家三选择倍率：</p>
+        <select id="multiplier-select3" style="display: none;">
+            <option value="0">请选择倍率（默认为0）</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+        <p>玩家四选择倍率：</p>
+        <select id="multiplier-select4" style="display: none;">
+            <option value="0">请选择倍率（默认为0）</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+    </div>
     
     <!-- 结果区域 -->
     <div id="result-div" style="display: none;"></div>
 
     <!-- 引入JavaScript文件 -->
     <script src="dice-game.js"></script>
+    <script src="ai.js"></script>
+    
 
     <!-- 定义一个函数，用来切换骰子元素的选中状态 -->
     <script>
@@ -91,5 +126,6 @@
           }
       }
     </script>
+
 </body>
 </html>
