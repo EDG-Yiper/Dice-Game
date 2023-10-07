@@ -12,7 +12,7 @@ let gameCount = 0; // 游戏局数
 let roundCount = 0; // 当前局的轮数
 let playerCount = 0; // 玩家个数
 let currentPlayer = 0; // 当前玩家的索引，从0开始
-let players = []; // 玩家数组，每个元素是一个对象，包含name, chips, dice, locked, score, bonus, multiplier等属性
+let players = []; // 玩家数组，每个元素是一个对象，包含name, chips, dice, locked, score, bonus, multiplier，isAi等属性
 let totalMultiplier = 0; //总倍率，初始为0
 let gameOver = false; // 游戏是否结束的标志
 
@@ -31,6 +31,8 @@ let diceDiv = document.getElementById("dice-div"); // 当前玩家的骰子div�
 let MagnificationsDiv = document.getElementById("Magnifications-div"); // 当前倍率
 let lockButton = document.getElementById("lock-button"); // 锁定骰子按钮
 let rollButton = document.getElementById("roll-button"); // 投掷骰子按钮
+let isaiButton = document.getElementById("isai-button"); // 托管按钮
+let noaiButton = document.getElementById("noai-button"); // 取消托管按钮
 let nextButton = document.getElementById("next-button"); // 下一位玩家按钮
 let multiplierSelect1 = document.getElementById("multiplier-select1"); // 玩家1倍率选择框
 let multiplierSelect2 = document.getElementById("multiplier-select2"); // 玩家2倍率选择框
@@ -85,7 +87,6 @@ modeSelect.addEventListener("change", function() {
     
 function getPlayers() {
     playerCount = playerInput.value; // 获取用户输入的玩家个数
-    console.log(playerCount)
     playerCount = parseInt(playerCount); // 将输入转换为整数
     if (isNaN(playerCount) || playerCount < MIN_PLAYERS || playerCount > MAX_PLAYERS) {
         errorSpan.style.display = "inline"; // 显示错误信息
@@ -111,7 +112,6 @@ document.body.appendChild(errorSpan); // 将错误信息元素添加到body中
 
 startButton.addEventListener("click", function() {
     gameCount = countInput.value; // 获取用户输入的游戏局数
-    console.log(gameCount)
     gameCount = parseInt(gameCount); // 将输入转换为整数
     if (isNaN(gameCount) || gameCount <= 0) {
         alert("无效的输入，请重新输入游戏局数！"); // 如果输入不合法，弹出提示，并清空游戏局数输入框
@@ -148,6 +148,25 @@ nextButton.addEventListener("click", function() {
     switchPlayer(); // 下一位玩家
 });
 
+isaiButton.addEventListener("click", function() {
+    if(rollButton.style.display == "inline"){
+        players[currentPlayer].isAi = 1;
+        isaiButton.style.display = "none";
+        noaiButton.style.display = "inline";
+        computerPlayerLogic();
+        switchPlayer();
+    }
+    else{
+        window.alert("请在投掷骰子前托管");
+    }
+});
+
+noaiButton.addEventListener("click", function() {
+    players[currentPlayer].isAi = 0;
+    noaiButton.style.display = "none";
+    isaiButton.style.display = "inline";
+});
+
 // 定义一些函数，实现游戏的逻辑
 
 // 初始化游戏
@@ -164,7 +183,9 @@ function initGame(initialChips) {
         let player = {}; // 创建一个玩家对象
         if (gameMode === "单人" && i === 1) {
             player.name = "电脑"; // 单人模式下，第二个玩家是电脑
+            player.isAi = 1; // 是由电脑控制的
         } else {
+            player.isAi = 0;
             player.name = prompt("请输入玩家" + (i + 1) + "的姓名：", "玩家" + (i + 1)); // 多人模式下，让用户输入每个玩家的姓名
         }
         player.chips = initialChips; // 设置玩家的初始筹码数
@@ -209,9 +230,16 @@ function startGame() {
     }
 }
 
-// 开始一轮投掷骰子
+// 开始新一个玩家回合
 function startRound() {
-
+    isaiButton.style.display = "none";
+    noaiButton.style.display = "none";
+    if(players[currentPlayer].isAi == 1 && players[currentPlayer].name !== "电脑"){           //当前玩家为托管
+        noaiButton.style.display = "inline";
+    }
+    else{           //当前玩家不为托管
+        isaiButton.style.display = "inline";
+    }
 
     // 更新界面上的信息
     updateUI();
@@ -219,8 +247,9 @@ function startRound() {
     rollButton.style.display = ("inline");
 
     // 如果当前玩家是电脑玩家，那么调用电脑玩家的逻辑函数
-    if (players[currentPlayer].name === "电脑") {
+    if (players[currentPlayer].isAi === 1) {
         computerPlayerLogic();
+        switchPlayer();
     }
 }
 
@@ -279,14 +308,34 @@ function rollDice() {
 
 // 确认倍率
 function confirmMultiplier() {
-    // 获取用户选择的倍率，并更新当前玩家的倍率属性
-    let multiplier = parseInt(multiplierSelect1.value) + parseInt(multiplierSelect2.value) + parseInt(multiplierSelect3.value) + parseInt(multiplierSelect4.value);
-    multiplier = parseInt(multiplier);
+    // 获取所有用户选择的倍率，并更新当前总倍率
+    if (players[0].isAi === 0){
+        players[0].multiplier = multiplierSelect1.value;
+    }
+    if (players[1].isAi === 0){
+        players[1].multiplier = multiplierSelect2.value;
+    }
+    if (playerCount >= 3){
+        if (players[2].isAi === 0){
+            players[2].multiplier = multiplierSelect3.value;
+        }
+    }
+    if (playerCount === 4){
+        if (players[3].isAi === 0){
+            players[3].multiplier = multiplierSelect4.value;
+        }
+    }
+    let multiplier = 0;
+    for (let player of players){
+        
+        multiplier += parseInt(player.multiplier);
+    }
+
     totalMultiplier += multiplier;
 
     //确认倍率按钮
     confirmButton.style.display = "none";
-    divesDiv.innerHTML="<h2>骰子结果显示区域：</h2>"
+    // divesDiv.innerHTML="<h2>骰子结果显示区域：</h2>"
     // 如果当前轮数小于最大轮数，那么开始下一轮投掷骰子，否则计算结果
     currentPlayer = 0; // 重置当前玩家的索引为0
     if (roundCount < MAX_ROUNDS) {
@@ -311,7 +360,7 @@ function confirmMultiplier() {
 function switchPlayer() {
     currentPlayer++; // 增加当前玩家的索引
 
-    // 如果当前玩家的索引等于玩家个数，说明一轮投掷结束了，那么判断是否需要进行下一轮或者计算结果
+    // 如果当前玩家的索引等于玩家个数，说明一轮投掷结束了，未结束时更新UI并开启下一轮投掷
     if (currentPlayer !== playerCount) {
         updateUI();
         startRound();
