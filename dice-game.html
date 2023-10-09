@@ -7,29 +7,23 @@
     <link rel="stylesheet" href="dice-game.css">
 </head>
 <body>
-    <h1>掷骰子游戏</h1>
     <!-- 游戏开始界面 -->
     <div id="scene-startgame">
         <p>这是初始界面</p >
-        <button id="start">开始游戏</button>
+        <button id="rule">游戏规则介绍</button>
+        <button id="singlePlayers">单人玩家（电脑作战）</button>
+        <button id="twoPlayers">双人对战</button>
+        <button id="threePlayers">三人对战</button>
+        <button id="fourPlayers">四人对战</button>
+
     </div>
     <!-- 规则介绍界面 -->
     <div id="scene-gamerule">
         <p>这是游戏规则介绍</p >
-        <button id="understand">我已经懂了</button>
+        <button id="understand">返回开始界面</button>
     </div>
     <!-- 游戏设置区域 -->
     <div id="setting-div">
-        <label for="mode-select">请选择游戏模式：</label>
-        <select id="mode-select">
-            <option value="">请选择</option>
-            <option value="单人">单人</option>
-            <option value="多人">多人</option>
-        </select>
-        <br>
-        <label for="player-input" style="display: none;">请输入玩家个数（2~4）：</label>
-        <input id="player-input" style="display: none;" type="text" max="4">
-        <br>
         <label for="count-input">请输入游戏局数：</label>
         <input id="count-input" type="number" min="1" value="1">
         <br>
@@ -38,8 +32,10 @@
         <br>
         <button id="start-button">开始游戏</button>
     </div>
-    <!-- 游戏区域 -->
-    <div id="game-div" style="display: none;">
+    <!-- 游戏顶格基本信息区域 -->
+    <div id="topdata-div" style="display: none;">
+        <!-- 当前局数 -->
+        <div id="gamecount-div"></div>
         <!-- 当前轮数 -->
         <div id="round-div"></div>
         <!-- 当前玩家 -->
@@ -47,6 +43,10 @@
         <!-- 当前玩家的筹码数 -->
         <div id="chips-div"></div>
         <!-- 当前倍率 -->
+        <div id="Magnifications-div"></div>
+    </div>
+    <!-- 游戏区域 -->
+    <div id="game-div" style="display: none;">
         <div id="Magnifications-div"></div>
         <!-- 当前玩家的骰子区域 -->
         <div id="dice-div">
@@ -57,10 +57,6 @@
             <span onclick="toggleSelect(this)"></span>
             <span onclick="toggleSelect(this)"></span>
         </div>
-        <!-- 托管按钮 -->
-        <button id="isai-button" style="display: none;">托管</button>
-        <!-- 取消托管按钮 -->
-        <button id="noai-button" style="display: none;">取消托管</button>
         <!-- 投掷骰子按钮 -->
         <button id="roll-button">投掷骰子</button>
         <!-- 锁定骰子按钮 -->
@@ -71,11 +67,17 @@
         <button id="confirm-button" style="display: none;">确认倍率</button>
     </div>
 
-    <!-- 骰子结果储存区域 -->
-    <div id="dives-div" style="display: none;"><h2>骰子结果显示区域：</h2></div>
-
-    <!-- 倍率选择区域区域 -->
-    <div id="choose-div" style="display: none;">
+    <!-- 玩家信息储存区域 -->
+    
+    <div id="player-1" style="display: none;">
+        <!-- 玩家1姓名 -->
+        <div id="name1"></div>
+        <!-- 玩家1筹码 -->
+        <div id="chips1"></div>
+        <!-- 托管按钮 -->
+        <button id="isai-button1" style="display: inline;">托管</button>
+        <!-- 取消托管按钮 -->
+        <button id="noai-button1" style="display: none;">取消托管</button>
         <!-- 倍率选择框 -->
         <p>玩家一选择倍率：</p>
         <select id="multiplier-select1" style="display: inline;">
@@ -85,7 +87,21 @@
             <option value="2">2</option>
             <option value="3">3</option>
         </select>
-        <p>玩家二选择倍率：</p>
+        <!-- 玩家1骰子结果储存区域 -->
+        <div id="dives1"></div>
+    </div>
+
+    <div id="player-2" style="display: none;">
+        <!-- 玩家1姓名 -->
+        <div id="name2"></div>
+        <!-- 玩家1筹码 -->
+        <div id="chips2"></div>
+        <!-- 托管按钮 -->
+        <button id="isai-button2" style="display: inline;">托管</button>
+        <!-- 取消托管按钮 -->
+        <button id="noai-button2" style="display: none;">取消托管</button>
+        <!-- 倍率选择框 -->
+        <p>玩家一选择倍率：</p>
         <select id="multiplier-select2" style="display: inline;">
             <option value="0">请选择倍率（默认为0）</option>
             <option value="0">0</option>
@@ -93,22 +109,52 @@
             <option value="2">2</option>
             <option value="3">3</option>
         </select>
-        <p>玩家三选择倍率：</p>
-        <select id="multiplier-select3" style="display: none;">
+        <!-- 玩家1骰子结果储存区域 -->
+        <div id="dives2"></div>
+    </div>
+
+    <div id="player-3" style="display: none;">
+        <!-- 玩家1姓名 -->
+        <div id="name3"></div>
+        <!-- 玩家1筹码 -->
+        <div id="chips3"></div>
+        <!-- 托管按钮 -->
+        <button id="isai-button3" style="display: inline;">托管</button>
+        <!-- 取消托管按钮 -->
+        <button id="noai-button3" style="display: none;">取消托管</button>
+        <!-- 倍率选择框 -->
+        <p>玩家一选择倍率：</p>
+        <select id="multiplier-select3" style="display: inline;">
             <option value="0">请选择倍率（默认为0）</option>
             <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
         </select>
-        <p>玩家四选择倍率：</p>
-        <select id="multiplier-select4" style="display: none;">
+        <!-- 玩家1骰子结果储存区域 -->
+        <div id="dives3"></div>
+    </div>
+
+    <div id="player-4" style="display: none;">
+        <!-- 玩家1姓名 -->
+        <div id="name4"></div>
+        <!-- 玩家1筹码 -->
+        <div id="chips4"></div>
+        <!-- 托管按钮 -->
+        <button id="isai-button4" style="display: inline;">托管</button>
+        <!-- 取消托管按钮 -->
+        <button id="noai-button4" style="display: none;">取消托管</button>
+        <!-- 倍率选择框 -->
+        <p>玩家一选择倍率：</p>
+        <select id="multiplier-select4" style="display: inline;">
             <option value="0">请选择倍率（默认为0）</option>
             <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
         </select>
+        <!-- 玩家1骰子结果储存区域 -->
+        <div id="dives4"></div>
     </div>
     
     <!-- 结果区域 -->

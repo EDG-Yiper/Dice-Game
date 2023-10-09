@@ -9,6 +9,7 @@ const BONUS_NAMES = ["双对", "三连", "葫芦", "四连", "五连", "小顺�
 
 let gameMode = ""; // 游戏模式，可以是"单人"或"多人"
 let gameCount = 0; // 游戏局数
+let currentgameCount = 1; // 当前游戏局数
 let roundCount = 0; // 当前局的轮数
 let playerCount = 0; // 玩家个数
 let currentPlayer = 0; // 当前玩家的索引，从0开始
@@ -17,13 +18,12 @@ let totalMultiplier = 0; //总倍率，初始为0
 let gameOver = false; // 游戏是否结束的标志
 
 // 定义一些DOM元素的引用，方便操作
-let modeSelect = document.getElementById("mode-select"); // 游戏模式选择框
 let countInput = document.getElementById("count-input"); // 游戏局数输入框
 let chipsInput = document.getElementById("chips-input"); // 玩家筹码输入框
-//去除弹窗
-let playerInput = document.getElementById("player-input"); // 游戏人数输入框
 let startButton = document.getElementById("start-button"); // 开始游戏按钮
+let topDiv = document.getElementById("topdata-div"); // 游戏上方区域的div元素
 let gameDiv = document.getElementById("game-div"); // 游戏区域的div元素
+let currentgameCountDiv = document.getElementById("gamecount-div"); // 当前局数的div元素
 let roundDiv = document.getElementById("round-div"); // 当前轮数的div元素
 let playerDiv = document.getElementById("player-div"); // 当前玩家的div元素
 let chipsDiv = document.getElementById("chips-div"); // 当前玩家的筹码div元素
@@ -31,28 +31,55 @@ let diceDiv = document.getElementById("dice-div"); // 当前玩家的骰子div�
 let MagnificationsDiv = document.getElementById("Magnifications-div"); // 当前倍率
 let lockButton = document.getElementById("lock-button"); // 锁定骰子按钮
 let rollButton = document.getElementById("roll-button"); // 投掷骰子按钮
-let isaiButton = document.getElementById("isai-button"); // 托管按钮
-let noaiButton = document.getElementById("noai-button"); // 取消托管按钮
 let nextButton = document.getElementById("next-button"); // 下一位玩家按钮
+
 let multiplierSelect1 = document.getElementById("multiplier-select1"); // 玩家1倍率选择框
 let multiplierSelect2 = document.getElementById("multiplier-select2"); // 玩家2倍率选择框
 let multiplierSelect3 = document.getElementById("multiplier-select3"); // 玩家3倍率选择框
 let multiplierSelect4 = document.getElementById("multiplier-select4"); // 玩家4倍率选择框
+let use1 = document.getElementById("player-1"); // 玩家1操作区域
+let use2 = document.getElementById("player-2"); // 玩家2操作区域
+let use3 = document.getElementById("player-3"); // 玩家3操作区域
+let use4 = document.getElementById("player-4"); // 玩家4操作区域
+let name1 = document.getElementById("name1"); // 玩家1的姓名
+let chips1 = document.getElementById("chips1"); // 玩家1的筹码
+let isaiButton1 = document.getElementById("isai-button1"); // 玩家1托管按钮
+let noaiButton1 = document.getElementById("noai-button1"); // 玩家1取消托管按钮
+let dives1 = document.getElementById("dives1"); // 玩家1的存储骰子区域
+let name2 = document.getElementById("name2"); // 玩家2的姓名
+let chips2 = document.getElementById("chips2"); // 玩家2的筹码
+let isaiButton2 = document.getElementById("isai-button2"); // 玩家2托管按钮
+let noaiButton2 = document.getElementById("noai-button2"); // 玩家2取消托管按钮
+let dives2 = document.getElementById("dives2"); // 玩家2的存储骰子区域
+let name3 = document.getElementById("name3"); // 玩家3的姓名
+let chips3 = document.getElementById("chips3"); // 玩家3的筹码
+let isaiButton3 = document.getElementById("isai-button3"); // 玩家3托管按钮
+let noaiButton3 = document.getElementById("noai-button3"); // 玩家3取消托管按钮
+let dives3 = document.getElementById("dives3"); // 玩家3的存储骰子区域
+let name4 = document.getElementById("name4"); // 玩家4的姓名
+let chips4 = document.getElementById("chips4"); // 玩家4的筹码
+let isaiButton4 = document.getElementById("isai-button4"); // 玩家4托管按钮
+let noaiButton4 = document.getElementById("noai-button4"); // 玩家4取消托管按钮
+let dives4 = document.getElementById("dives4"); // 玩家4的存储骰子区域
+
 let confirmButton = document.getElementById("confirm-button"); // 确认倍率按钮
 let resultDiv = document.getElementById("result-div"); // 结果区域的div元素
-let divesDiv = document.getElementById("dives-div"); // 存储骰子区域的div元素
-let chooseDiv = document.getElementById("choose-div"); // 选择倍率区域的div元素
+
 
 //这是界面切换
 let settingDiv = document.getElementById("setting-div");
 let sceneStartgame = document.getElementById("scene-startgame"); // 开始游戏的界面
 let sceneGamerule = document.getElementById("scene-gamerule"); // 规则介绍的界面
-let start = document.getElementById("start"); // 开始游戏按钮
+let rule = document.getElementById("rule"); // 规则介绍
 let understand = document.getElementById("understand"); // 进入游戏设置按钮 
+let singlePlayers = document.getElementById("singlePlayers"); // 规则介绍
+let twoPlayers = document.getElementById("twoPlayers"); // 规则介绍
+let threePlayers = document.getElementById("threePlayers"); // 规则介绍
+let fourPlayers = document.getElementById("fourPlayers"); // 规则介绍
 
 // 给开始游戏按钮添加点击事件，用来切换到游戏规则介绍场景
-start.addEventListener("click", function() {
-    // 隐藏初始界面
+rule.addEventListener("click", function() {
+    // 隐藏开始界面
     sceneStartgame.style.display = "none";
     // 显示游戏规则介绍
     sceneGamerule.style.display = "flex";
@@ -62,52 +89,46 @@ start.addEventListener("click", function() {
 understand.addEventListener("click", function() {
     // 隐藏游戏规则介绍
     sceneGamerule.style.display = "none";
-    // 显示游戏设置界面
-    settingDiv.style.display = "block";
+    // 返回开始界面
+    sceneStartgame.style.display = "flex";
 });
 
+// 点击单人玩家（电脑作战）按钮，切换到游戏开始界面，并设置好玩家数量
+singlePlayers.addEventListener("click",function() {
+    // 隐藏开始界面
+    sceneStartgame.style.display = "none";
+    // 进入游戏界面
+    settingDiv.style.display = "block";
+    playerCount = 2; // 设置玩家数为2
+    gameMode = "单人";
+});
 
-modeSelect.addEventListener("change", function() {
-        gameMode = modeSelect.value; // 获取用户选择的游戏模式
-        if (gameMode === "单人") {
-            playerCount = 2; // 单人模式下，玩家个数为2，其中一个是电脑玩家
-        } else if (gameMode === "多人") {
-            playerInput.style.display = "inline"; // 显示输入玩家提示
-            document.querySelector('[for="player-input"]').style.display='inline' // 显示输入玩家人数框
-            playerInput.addEventListener("keyup", function(event) {
-                if (event.keyCode === 13) { // 如果用户按下回车键
-                    getPlayers(); // 调用获取玩家个数的函数
-                }
-            });
-            playerInput.addEventListener("blur", function() { // 如果用户失去焦点
-                getPlayers(); // 调用获取玩家个数的函数
-            });
-        }
-    });
-    
-function getPlayers() {
-    playerCount = playerInput.value; // 获取用户输入的玩家个数
-    playerCount = parseInt(playerCount); // 将输入转换为整数
-    if (isNaN(playerCount) || playerCount < MIN_PLAYERS || playerCount > MAX_PLAYERS) {
-        errorSpan.style.display = "inline"; // 显示错误信息
-        errorSpan.textContent = "无效的输入，请重新输入！"; // 设置错误信息内容
-        modeSelect.value = "";
-        gameMode = "";
-        playerInput.focus(); // 让输入框重新获得焦点
-        return;
-    } else {
-        errorSpan.style.display = "none"; // 隐藏错误信息
-    }
-}
+// 点击双人对战按钮，切换到游戏开始界面，并设置好玩家数量
+twoPlayers.addEventListener("click",function() {
+    // 隐藏开始界面
+    sceneStartgame.style.display = "none";
+    // 进入游戏界面
+    settingDiv.style.display = "block";
+    playerCount = 2; // 设置玩家数为2
+});
 
-// 创建一个span元素来显示错误信息，并添加到HTML中
-let errorSpan = document.createElement("span");
-errorSpan.id = "error-span";
-errorSpan.style.display = "none"; // 默认隐藏错误信息
-errorSpan.style.color = "red"; // 设置错误信息颜色为红色
-errorSpan.style.fontWeight = "bold"; // 设置错误信息字体为粗体
-errorSpan.style.marginLeft = "10px"; // 设置错误信息左边距为10px
-document.body.appendChild(errorSpan); // 将错误信息元素添加到body中
+// 点击三人对战按钮，切换到游戏开始界面，并设置好玩家数量
+threePlayers.addEventListener("click",function() {
+    // 隐藏开始界面
+    sceneStartgame.style.display = "none";
+    // 进入游戏界面
+    settingDiv.style.display = "block";
+    playerCount = 3; // 设置玩家数为3
+});
+
+// 点击四人对战按钮，切换到游戏开始界面，并设置好玩家数量
+fourPlayers.addEventListener("click",function() {
+    // 隐藏开始界面
+    sceneStartgame.style.display = "none";
+    // 进入游戏界面
+    settingDiv.style.display = "block";
+    playerCount = 4; // 设置玩家数为4
+});
 
 
 startButton.addEventListener("click", function() {
@@ -123,10 +144,6 @@ startButton.addEventListener("click", function() {
     if (isNaN(initialChips) || initialChips <= 0) {
         alert("无效的输入，请重新输入玩家筹码数！"); // 如果输入不合法，弹出提示，并清空玩家筹码数输入框
         chipsInput.value = "";
-        return;
-    }
-    if (gameMode === "") {
-        alert("请选择游戏模式！"); // 如果没有选择游戏模式，弹出提示
         return;
     }
     initGame(initialChips); // 初始化游戏
@@ -148,34 +165,97 @@ nextButton.addEventListener("click", function() {
     switchPlayer(); // 下一位玩家
 });
 
-isaiButton.addEventListener("click", function() {
-    if(rollButton.style.display == "inline"){
-        players[currentPlayer].isAi = 1;
-        isaiButton.style.display = "none";
-        noaiButton.style.display = "inline";
+isaiButton1.addEventListener("click", function() {            //玩家1的托管按钮
+    players[0].isAi = 1;
+    isaiButton1.style.display = "none";
+    noaiButton1.style.display = "inline";
+    if(currentPlayer == 0){
+        if(rollButton.style.display == "inline"){             //区分投掷前投掷后托管
+            rollDice();
+        }
         computerPlayerLogic();
         switchPlayer();
     }
-    else{
-        window.alert("请在投掷骰子前托管");
+});
+
+noaiButton1.addEventListener("click", function() {            //玩家1的取消托管按钮
+    players[0].isAi = 0;
+    noaiButton1.style.display = "none";
+    isaiButton1.style.display = "inline";
+});
+
+isaiButton2.addEventListener("click", function() {            //玩家2的托管按钮
+    players[1].isAi = 1;
+    isaiButton2.style.display = "none";
+    noaiButton2.style.display = "inline";
+    if(currentPlayer == 1){
+        if(rollButton.style.display == "inline"){             //区分投掷前投掷后托管
+            rollDice();
+        }
+        computerPlayerLogic();
+        switchPlayer();
     }
 });
 
-noaiButton.addEventListener("click", function() {
-    players[currentPlayer].isAi = 0;
-    noaiButton.style.display = "none";
-    isaiButton.style.display = "inline";
+noaiButton2.addEventListener("click", function() {            //玩家2的取消托管按钮
+    players[1].isAi = 0;
+    noaiButton2.style.display = "none";
+    isaiButton2.style.display = "inline";
 });
 
-// 定义一些函数，实现游戏的逻辑
+isaiButton3.addEventListener("click", function() {            //玩家3的托管按钮
+    players[2].isAi = 1;
+    isaiButton3.style.display = "none";
+    noaiButton3.style.display = "inline";
+    if(currentPlayer == 2){
+        if(rollButton.style.display == "inline"){             //区分投掷前投掷后托管
+            rollDice();
+        }
+        computerPlayerLogic();
+        switchPlayer();
+    }
+});
+
+noaiButton3.addEventListener("click", function() {            //玩家3的取消托管按钮
+    players[2].isAi = 0;
+    noaiButton3.style.display = "none";
+    isaiButton3.style.display = "inline";
+});
+
+isaiButton4.addEventListener("click", function() {            //玩家4的托管按钮
+    players[3].isAi = 1;
+    isaiButton4.style.display = "none";
+    noaiButton4.style.display = "inline";
+    if(currentPlayer == 3){
+        if(rollButton.style.display == "inline"){             //区分投掷前投掷后托管
+            rollDice();
+        }
+        computerPlayerLogic();
+        switchPlayer();
+    }
+});
+
+noaiButton4.addEventListener("click", function() {            //玩家4的取消托管按钮
+    players[3].isAi = 0;
+    noaiButton4.style.display = "none";
+    isaiButton4.style.display = "inline";
+});
+
 
 // 初始化游戏
 function initGame(initialChips) {
     // 隐藏游戏设置区域，显示游戏区域
     document.getElementById("setting-div").style.display = "none";
+    topDiv.style.display = "block";
     gameDiv.style.display = "block";
-    divesDiv.style.display = "block";
-    chooseDiv.style.display = "block";
+    use1.style.display = "block";
+    use2.style.display = "block";
+    if (playerCount >=3 ){
+        use3.style.display = "block";
+    }
+    if (playerCount ==4 ){
+        use4.style.display = "block";
+    }
 
     // 初始化玩家数组
     players = [];
@@ -206,7 +286,18 @@ function startGame() {
     roundCount = 1; // 设置当前轮数为0
     currentPlayer = 0; // 设置当前玩家为第一个玩家
     totalMultiplier = 1; //设置当前倍率为1
-
+    name1.textContent = "玩家一姓名：" + players[0].name; // 显示玩家1的姓名
+    chips1.textContent = "筹码数：" + players[0].chips; // 显示并更新玩家1的筹码数
+    name2.textContent = "玩家二姓名：" + players[1].name; // 显示玩家2的姓名
+    chips2.textContent = "筹码数：" + players[1].chips; // 显示并更新玩家2的筹码数
+    if(playerCount >= 3){
+        name3.textContent = "玩家三姓名：" + players[2].name; // 显示玩家3的姓名
+        chips3.textContent = "筹码数：" + players[2].chips; // 显示并更新玩家3的筹码数
+    }
+    if(playerCount == 4){
+        name4.textContent = "玩家四姓名：" + players[3].name; // 显示玩家4的姓名
+        chips4.textContent = "筹码数：" + players[3].chips; // 显示并更新玩家4的筹码数
+    }
     // 遍历每个玩家，重置他们的骰子数组，锁定数组，得分，奖励类型和倍率
     for (let player of players) {
         player.dice = [];
@@ -232,14 +323,6 @@ function startGame() {
 
 // 开始新一个玩家回合
 function startRound() {
-    isaiButton.style.display = "none";
-    noaiButton.style.display = "none";
-    if(players[currentPlayer].isAi == 1 && players[currentPlayer].name !== "电脑"){           //当前玩家为托管
-        noaiButton.style.display = "inline";
-    }
-    else{           //当前玩家不为托管
-        isaiButton.style.display = "inline";
-    }
 
     // 更新界面上的信息
     updateUI();
@@ -248,6 +331,7 @@ function startRound() {
 
     // 如果当前玩家是电脑玩家，那么调用电脑玩家的逻辑函数
     if (players[currentPlayer].isAi === 1) {
+        rollDice();
         computerPlayerLogic();
         switchPlayer();
     }
@@ -294,7 +378,18 @@ function rollDice() {
     let str3="<span>"+players[currentPlayer].dice[2]+"</span>"
     let str4="<span>"+players[currentPlayer].dice[3]+"</span>"
     let str5="<span>"+players[currentPlayer].dice[4]+"</span>"
-    divesDiv.innerHTML += "<p>"+players[currentPlayer].name+"第"+roundCount+"轮"+str1+str2+str3+str4+str5+"</p>";
+    if(currentPlayer == 0){
+        dives1.innerHTML = "<p>"+str1+str2+str3+str4+str5+"</p>";
+    }
+    if(currentPlayer == 1){
+        dives2.innerHTML = "<p>"+str1+str2+str3+str4+str5+"</p>";
+    }
+    if(currentPlayer == 2){
+        dives3.innerHTML = "<p>"+str1+str2+str3+str4+str5+"</p>";
+    }
+    if(currentPlayer == 3){
+        dives4.innerHTML = "<p>"+str1+str2+str3+str4+str5+"</p>";
+    }
     updateUI();
 
     lockButton.style.display = "inline";      //显示锁定骰子按钮
@@ -341,7 +436,6 @@ function confirmMultiplier() {
     if (roundCount < MAX_ROUNDS) {
         roundCount++; // 增加当前轮数
         if(roundCount == 3){
-            chooseDiv.style.display = "none"
             multiplierSelect1.value = 0
             multiplierSelect2.value = 0
             multiplierSelect3.value = 0
@@ -369,8 +463,9 @@ function switchPlayer() {
     nextButton.style.display = "none";
 }
 
-// 更新界面上的信息
+// 更新界面上的信息，使锁定的骰子变为绿色，更新
 function updateUI() {
+    currentgameCountDiv.textContent = "第" + currentgameCount + "局"; // 显示当前局数
     roundDiv.textContent = "第" + roundCount + "轮"; // 显示当前轮数
     playerDiv.textContent = "当前玩家：" + players[currentPlayer].name; // 显示当前玩家的姓名
     chipsDiv.textContent = "筹码数：" + players[currentPlayer].chips; // 显示当前玩家的筹码数
@@ -500,9 +595,19 @@ function showResult() {
         }
     }
 
+    chips1.textContent = "筹码数：" + players[0].chips; // 显示并更新玩家1的筹码数
+    chips2.textContent = "筹码数：" + players[1].chips; // 显示并更新玩家2的筹码数
+    if(playerCount >= 3){
+        chips3.textContent = "筹码数：" + players[2].chips; // 显示并更新玩家3的筹码数
+    }
+    if(playerCount == 4){
+        chips4.textContent = "筹码数：" + players[3].chips; // 显示并更新玩家4的筹码数
+    }
+
     // 如果游戏没有结束，那么判断是否还有剩余的局数，如果有，那么开始下一局游戏，否则设置游戏结束标志为true，并显示结果区域
     if (!gameOver) {
         gameCount--; // 减少剩余的局数
+        currentgameCount++;
         if (gameCount > 0) {
             startGame();
         } else {

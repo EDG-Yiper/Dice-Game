@@ -5,14 +5,6 @@
     padding: 0;
 }
 
-/* 定义游戏标题的样式 */
-h1 {
-    text-align: center;
-    font-family: "Comic Sans MS", cursive, sans-serif;
-    font-size: 36px;
-    color: #ff0000;
-    text-shadow: 2px 2px 4px #000000;
-}
 /* 游戏开始界面 */
 #scene-startgame {
     width: 300px;
@@ -52,8 +44,29 @@ h1 {
     font-size: 18px;
 }
 
+/* 定义游戏上方区域的样式 */
+#topdata-div {
+    position: absolute;
+    left: 4%;
+    top: 3%;
+    width: 50%;
+    margin: 20px auto;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    padding: 10px;
+}
+#topdata-div div {
+    display: inline-block;
+    margin: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+}
+
 /* 定义游戏区域的样式 */
 #game-div {
+    position: absolute;
+    left: 4%;
+    top: 15%;
     width: 80%;
     margin: 20px auto;
     border: 2px solid #000000;
@@ -63,14 +76,20 @@ h1 {
 
 /* 定义游戏区域内的元素的样式 */
 #game-div div,
-#game-div button,
 #game-div select {
     display: inline-block;
     margin: 10px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 18px;
 }
-
+#game-div button {
+    position:relative;
+    left: 60%;
+    top: -100px;
+    width: 200px;
+    height: 50px;
+    font-size: 24px;
+}
 /* 定义骰子区域的样式 */
 #dice-div {
     width: 100%;
@@ -79,12 +98,13 @@ h1 {
 /* 定义骰子元素的样式 */
 #dice-div span {
     display: inline-block;
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
+    font-size: 24px;
     border: 2px solid #000000;
-    border-radius: 10px;
+    border-radius: 20px;
     text-align: center;
-    line-height: 50px;
+    line-height: 100px;
 }
 
 /* 定义骰子元素被选中时的样式 */
@@ -95,6 +115,100 @@ h1 {
 /* 定义骰子元素被锁定时的样式 */
 #dice-div span.locked {
     background-color: #00ff00;
+}
+
+/* 玩家信息储存区域  */
+#player-1 {
+    border: 2px solid #000000;
+    border-radius: 20px;
+    position: absolute;
+    left: 4%;
+    top: 50%;
+    width: 20%;
+}
+#player-1 div {
+    display: inline-block;
+    margin: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+}
+#player-1 span {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 50px;
+}
+#player-2 {
+    border: 2px solid #000000;
+    border-radius: 20px;
+    position: absolute;
+    left: 28%;
+    top:50%;
+    width: 20%;
+}
+#player-2 div {
+    display: inline-block;
+    margin: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+}
+#player-2 span {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 50px;
+}
+#player-3 {
+    border: 2px solid #000000;
+    border-radius: 20px;
+    position: absolute;
+    left: 52%;
+    top: 50%;
+    width: 20%;
+}
+#player-3 div {
+    display: inline-block;
+    margin: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+}
+#player-3 span {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 50px;
+}
+#player-4 {
+    border: 2px solid #000000;
+    border-radius: 20px;
+    position: absolute;
+    left: 76%;
+    top: 50%;
+    width: 20%;
+}
+#player-4 div {
+    display: inline-block;
+    margin: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+}
+#player-4 span {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 50px;
 }
 
 /* 定义结果区域的样式 */
@@ -109,47 +223,6 @@ h1 {
 /* 定义结果区域内的元素的样式 */
 #result-div h3,
 #result-div p {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
-}
-
-/* 定义骰子存储区域的样式 */
-#dives-div {
-    width: 80%;
-    margin: 20px auto;
-    border: 2px solid #000000;
-    border-radius: 10px;
-    padding: 10px;
-}
-
-
-/* 定义骰子存储区域内的元素的样式 */
-#dives-div h3,
-#dives-div p {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
-}
-#dives-div span {
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    border: 2px solid #000000;
-    border-radius: 10px;
-    text-align: center;
-    line-height: 50px;
-}
-
-/* 定义倍率选择区域的样式 */
-#choose-div {
-    width: 80%;
-    margin: 20px auto;
-    border: 2px solid #000000;
-    border-radius: 10px;
-    padding: 10px;
-}
-#choose-div select {
-    display: inline-block;
-    margin: 10px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 18px;
 }
