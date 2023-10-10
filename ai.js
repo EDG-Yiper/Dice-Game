@@ -5,20 +5,10 @@ function computerPlayerLogic() {
 
     let locked = players[currentPlayer].locked;
 
-    // 直接调用投掷骰子函数
-    rollDice();
-    // console.log("排序前");
-    // console.log(dice);
-    // console.log(players[currentPlayer].dice);
-    // console.log("-------");
-
-    // 对骰子数组进行排序，方便判断奖励类型
-    dice.sort();
-    // console.log("排序后");
-    // console.log(dice);
-    // console.log(players[currentPlayer].dice);
-    // console.log("-------");
-
+    if (roundCount === 3) {
+        players[currentPlayer].multiplier = 0;
+        return;
+    }
 
     if (roundCount !== 3){
 
@@ -93,33 +83,37 @@ function computerPlayerLogic() {
         }
 
         // 判断是否有小顺子，即四个数字连续的骰子，如果有，那么锁定这四个骰子，并选择中等倍率
-        // let dic = dice;
-        // for (i = 2; i <= 4; i++) {
-        //     if(dic[i] == dic[i-1]){
-        //         dic[i] = dic[i + 1]
-        //     }
-        // }
-        // if ((dic[0] + 1 === dic[1] && dic[1] + 1 === dic[2] && dic[2] + 1 === dic[3]) || (dic[1] + 1 === dic[2] && dic[2] + 1 === dic[3] && dic[3] + 1 === dic[4])) {
-        //     for (let i = 0; i < MAX_DICE - 1; i++) {
-        //         locked[i] = true;
-        //     }
-        //     players[currentPlayer].multiplier = 2;
-        //     return;
-        // }
-
-        // 判断是否有小顺子，即四个数字连续的骰子，如果有，那么锁定这四个骰子，并选择中等倍率
-        // for (let i = 0; i < MAX_DICE - 3; i++) {
-        //     if (dice[i] + 1 === dice[i + 1] && dice[i + 1] + 1 === dice[i + 2] && dice[i + 2] + 1 === dice[i + 3]) {
-        //         for (let j = i; j < i + 4; j++) {
-        //             locked[j] = true;
-        //         }
-        //         players[currentPlayer].multiplier = 1;
-        //         return;
-        //     }
-        // }
+        for (let i = 0; i < 2; i++) {
+            if (dice[i] + 1 === dice[i + 1] && dice[i + 1] + 1 === dice[i + 2] && dice[i + 2] + 1 === dice[i + 3]) {
+                for (let j = i; j < i + 4; j++) {
+                    locked[j] = true;
+                }
+                players[currentPlayer].multiplier = 1;
+                return;
+            }
+        }
+        if(dice[0]+1 == dice[1] && dice[1]+1 == dice[3] && dice[3]+1 == dice[4]){
+            locked[0] = true;
+            locked[1] = true;
+            locked[3] = true;
+            locked[4] = true;
+            players[currentPlayer].multiplier = 1;
+            return;
+        }
     }
 
     // 如果没有以上任何一种情况，那么根据当前轮数和骰子点数来决定是否锁定某些骰子或者重新投掷
+
+    // 如果是第二轮投掷，那么锁定点数为4或以上的骰子，并选择低等倍率
+    if (roundCount === 2) {
+        for (let i = 0; i < MAX_DICE; i++) {
+            if (dice[i] >= 4) {
+                locked[i] = true;
+            }
+        }
+        players[currentPlayer].multiplier = 1;
+        return;
+    }
 
     // 如果是第一轮投掷，那么锁定点数为5或6的骰子，并选择低等倍率
     if (roundCount === 1) {
@@ -133,19 +127,4 @@ function computerPlayerLogic() {
         
     }
 
-    // 如果是第二轮投掷，那么锁定点数为4或以上的骰子，并选择低等倍率
-    if (roundCount === 2) {
-        for (let i = 0; i < MAX_DICE; i++) {
-            if (dice[i] >= 4) {
-                locked[i] = true;
-            }
-        }
-        players[currentPlayer].multiplier = 1;
-        return;
-    }
-
-    if (roundCount === 3) {
-        players[currentPlayer].multiplier = 0;
-        return;
-    }
 }

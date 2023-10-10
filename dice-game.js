@@ -7,6 +7,8 @@ const INITIAL_CHIPS = 100; // 每个玩家初始的筹码数
 const BONUS_SCORES = [10, 10, 20, 40, 100, 30, 60, 0]; // 奖励分数
 const BONUS_NAMES = ["双对", "三连", "葫芦", "四连", "五连", "小顺子", "大顺子"]; // 奖励名称
 
+let arr=["<img src=image2.jpg>","<img src=image3.jpg>","<img src=image4.jpg>","<img src=image5.jpg>","<img src=image6.jpg>","<img src=image7.jpg>"];
+
 let gameMode = ""; // 游戏模式，可以是"单人"或"多人"
 let gameCount = 0; // 游戏局数
 let currentgameCount = 1; // 当前游戏局数
@@ -45,21 +47,25 @@ let name1 = document.getElementById("name1"); // 玩家1的姓名
 let chips1 = document.getElementById("chips1"); // 玩家1的筹码
 let isaiButton1 = document.getElementById("isai-button1"); // 玩家1托管按钮
 let noaiButton1 = document.getElementById("noai-button1"); // 玩家1取消托管按钮
+let aitext1 = document.getElementById("aitext1"); // 玩家1的ai托管描述
 let dives1 = document.getElementById("dives1"); // 玩家1的存储骰子区域
 let name2 = document.getElementById("name2"); // 玩家2的姓名
 let chips2 = document.getElementById("chips2"); // 玩家2的筹码
 let isaiButton2 = document.getElementById("isai-button2"); // 玩家2托管按钮
 let noaiButton2 = document.getElementById("noai-button2"); // 玩家2取消托管按钮
+let aitext2 = document.getElementById("aitext2"); // 玩家2的ai托管描述
 let dives2 = document.getElementById("dives2"); // 玩家2的存储骰子区域
 let name3 = document.getElementById("name3"); // 玩家3的姓名
 let chips3 = document.getElementById("chips3"); // 玩家3的筹码
 let isaiButton3 = document.getElementById("isai-button3"); // 玩家3托管按钮
 let noaiButton3 = document.getElementById("noai-button3"); // 玩家3取消托管按钮
+let aitext3 = document.getElementById("aitext3"); // 玩家3的ai托管描述
 let dives3 = document.getElementById("dives3"); // 玩家3的存储骰子区域
 let name4 = document.getElementById("name4"); // 玩家4的姓名
 let chips4 = document.getElementById("chips4"); // 玩家4的筹码
 let isaiButton4 = document.getElementById("isai-button4"); // 玩家4托管按钮
 let noaiButton4 = document.getElementById("noai-button4"); // 玩家4取消托管按钮
+let aitext4 = document.getElementById("aitext4"); // 玩家4的ai托管描述
 let dives4 = document.getElementById("dives4"); // 玩家4的存储骰子区域
 
 let confirmButton = document.getElementById("confirm-button"); // 确认倍率按钮
@@ -98,7 +104,7 @@ singlePlayers.addEventListener("click",function() {
     // 隐藏开始界面
     sceneStartgame.style.display = "none";
     // 进入游戏界面
-    settingDiv.style.display = "block";
+    settingDiv.style.display = "flex";
     playerCount = 2; // 设置玩家数为2
     gameMode = "单人";
 });
@@ -108,7 +114,7 @@ twoPlayers.addEventListener("click",function() {
     // 隐藏开始界面
     sceneStartgame.style.display = "none";
     // 进入游戏界面
-    settingDiv.style.display = "block";
+    settingDiv.style.display = "flex";
     playerCount = 2; // 设置玩家数为2
 });
 
@@ -117,7 +123,7 @@ threePlayers.addEventListener("click",function() {
     // 隐藏开始界面
     sceneStartgame.style.display = "none";
     // 进入游戏界面
-    settingDiv.style.display = "block";
+    settingDiv.style.display = "flex";
     playerCount = 3; // 设置玩家数为3
 });
 
@@ -126,7 +132,7 @@ fourPlayers.addEventListener("click",function() {
     // 隐藏开始界面
     sceneStartgame.style.display = "none";
     // 进入游戏界面
-    settingDiv.style.display = "block";
+    settingDiv.style.display = "flex";
     playerCount = 4; // 设置玩家数为4
 });
 
@@ -166,7 +172,13 @@ nextButton.addEventListener("click", function() {
 });
 
 isaiButton1.addEventListener("click", function() {            //玩家1的托管按钮
+    if(gameOver){
+        window.alert("已经结束嘞！");
+        return;
+    }
     players[0].isAi = 1;
+    multiplierSelect1.style.display = "none";
+    aitext1.style.display = "inline";
     isaiButton1.style.display = "none";
     noaiButton1.style.display = "inline";
     if(currentPlayer == 0){
@@ -174,18 +186,27 @@ isaiButton1.addEventListener("click", function() {            //玩家1的托管
             rollDice();
         }
         computerPlayerLogic();
+        updateUI();
         switchPlayer();
     }
 });
 
 noaiButton1.addEventListener("click", function() {            //玩家1的取消托管按钮
     players[0].isAi = 0;
+    multiplierSelect1.style.display = "inline";
+    aitext1.style.display = "none";
     noaiButton1.style.display = "none";
     isaiButton1.style.display = "inline";
 });
 
 isaiButton2.addEventListener("click", function() {            //玩家2的托管按钮
+    if(gameOver){
+        window.alert("已经结束嘞！");
+        return;
+    }
     players[1].isAi = 1;
+    multiplierSelect2.style.display = "none";
+    aitext2.style.display = "inline";
     isaiButton2.style.display = "none";
     noaiButton2.style.display = "inline";
     if(currentPlayer == 1){
@@ -193,18 +214,27 @@ isaiButton2.addEventListener("click", function() {            //玩家2的托管
             rollDice();
         }
         computerPlayerLogic();
+        updateUI();
         switchPlayer();
     }
 });
 
 noaiButton2.addEventListener("click", function() {            //玩家2的取消托管按钮
     players[1].isAi = 0;
+    multiplierSelect2.style.display = "inline";
+    aitext2.style.display = "none";
     noaiButton2.style.display = "none";
     isaiButton2.style.display = "inline";
 });
 
 isaiButton3.addEventListener("click", function() {            //玩家3的托管按钮
+    if(gameOver){
+        window.alert("已经结束嘞！");
+        return;
+    }
     players[2].isAi = 1;
+    multiplierSelect3.style.display = "none";
+    aitext3.style.display = "inline";
     isaiButton3.style.display = "none";
     noaiButton3.style.display = "inline";
     if(currentPlayer == 2){
@@ -212,18 +242,27 @@ isaiButton3.addEventListener("click", function() {            //玩家3的托管
             rollDice();
         }
         computerPlayerLogic();
+        updateUI();
         switchPlayer();
     }
 });
 
 noaiButton3.addEventListener("click", function() {            //玩家3的取消托管按钮
     players[2].isAi = 0;
+    multiplierSelect3.style.display = "inline";
+    aitext3.style.display = "none";
     noaiButton3.style.display = "none";
     isaiButton3.style.display = "inline";
 });
 
 isaiButton4.addEventListener("click", function() {            //玩家4的托管按钮
+    if(gameOver){
+        window.alert("已经结束嘞！");
+        return;
+    }
     players[3].isAi = 1;
+    multiplierSelect4.style.display = "none";
+    aitext4.style.display = "inline";
     isaiButton4.style.display = "none";
     noaiButton4.style.display = "inline";
     if(currentPlayer == 3){
@@ -231,12 +270,15 @@ isaiButton4.addEventListener("click", function() {            //玩家4的托管
             rollDice();
         }
         computerPlayerLogic();
+        updateUI();
         switchPlayer();
     }
 });
 
 noaiButton4.addEventListener("click", function() {            //玩家4的取消托管按钮
     players[3].isAi = 0;
+    multiplierSelect4.style.display = "inline";
+    aitext4.style.display = "none";
     noaiButton4.style.display = "none";
     isaiButton4.style.display = "inline";
 });
@@ -264,6 +306,7 @@ function initGame(initialChips) {
         if (gameMode === "单人" && i === 1) {
             player.name = "电脑"; // 单人模式下，第二个玩家是电脑
             player.isAi = 1; // 是由电脑控制的
+            isaiButton2.style.display = "none";
         } else {
             player.isAi = 0;
             player.name = prompt("请输入玩家" + (i + 1) + "的姓名：", "玩家" + (i + 1)); // 多人模式下，让用户输入每个玩家的姓名
@@ -313,12 +356,6 @@ function startGame() {
     startRound();
     lockButton.style.display = "none";       //游戏开始时隐藏锁定按钮和下一位玩家按钮
     nextButton.style.display = "none";
-    if(playerCount >= 3){             //当玩家数为3时出现第三个倍率选择框
-        multiplierSelect3.style.display = "inline";
-    }
-    if(playerCount == 4){             //当玩家数为4时出现第四个倍率选择框
-        multiplierSelect4.style.display = "inline";
-    }
 }
 
 // 开始新一个玩家回合
@@ -333,6 +370,7 @@ function startRound() {
     if (players[currentPlayer].isAi === 1) {
         rollDice();
         computerPlayerLogic();
+        updateUI();
         switchPlayer();
     }
 }
@@ -372,27 +410,40 @@ function rollDice() {
         }
     }
 
-    // 更新界面上的信息
-    let str1="<span>"+players[currentPlayer].dice[0]+"</span>"
-    let str2="<span>"+players[currentPlayer].dice[1]+"</span>"
-    let str3="<span>"+players[currentPlayer].dice[2]+"</span>"
-    let str4="<span>"+players[currentPlayer].dice[3]+"</span>"
-    let str5="<span>"+players[currentPlayer].dice[4]+"</span>"
-    if(currentPlayer == 0){
-        dives1.innerHTML = "<p>"+str1+str2+str3+str4+str5+"</p>";
-    }
-    if(currentPlayer == 1){
-        dives2.innerHTML = "<p>"+str1+str2+str3+str4+str5+"</p>";
-    }
-    if(currentPlayer == 2){
-        dives3.innerHTML = "<p>"+str1+str2+str3+str4+str5+"</p>";
-    }
-    if(currentPlayer == 3){
-        dives4.innerHTML = "<p>"+str1+str2+str3+str4+str5+"</p>";
-    }
-    updateUI();
+    // 对骰子数组进行排序，方便判断奖励类型
+    for (i = 0; i < 4;i ++)//size-1是因为不用与自己比较，所以比的数就少一个
+	{
+		var count = 0;
+		for (j = 0; j < 4 - i; j++)	//size-1-i是因为每一趟就会少一个数比较
+		{
+			if (dice[j] > dice[j+1])//这是升序排法，前一个数和后一个数比较，如果前数大则与后一个数换位置
+			{
+				tem = dice[j];
+                tem0 = locked[j];
+				dice[j] = dice[j+1];
+				dice[j+1] = tem;
+                locked[j] = locked[j+1];
+                locked[j+1] = tem0;
+				count = 1;
+				
+			}
+		}
+		if (count == 0)			//如果某一趟没有交换位置，则说明已经排好序，直接退出循环
+				break;	
+	}
 
-    lockButton.style.display = "inline";      //显示锁定骰子按钮
+    if(roundCount == 3){
+        locked[0]=true;
+        locked[1]=true;
+        locked[2]=true;
+        locked[3]=true;
+        locked[4]=true;
+    }
+
+    updateUI();
+    if(roundCount != 3){
+        lockButton.style.display = "inline";      //显示锁定骰子按钮
+    }
     if (currentPlayer !== playerCount - 1) {
         nextButton.style.display = "inline";      //显示下一位玩家按钮
     } else{
@@ -404,6 +455,13 @@ function rollDice() {
 // 确认倍率
 function confirmMultiplier() {
     // 获取所有用户选择的倍率，并更新当前总倍率
+    if(roundCount == 3){
+        multiplierSelect1.value = 0;
+        multiplierSelect2.value = 0;
+        multiplierSelect3.value = 0;
+        multiplierSelect4.value = 0;
+    }
+    
     if (players[0].isAi === 0){
         players[0].multiplier = multiplierSelect1.value;
     }
@@ -430,20 +488,11 @@ function confirmMultiplier() {
 
     //确认倍率按钮
     confirmButton.style.display = "none";
-    // divesDiv.innerHTML="<h2>骰子结果显示区域：</h2>"
-    // 如果当前轮数小于最大轮数，那么开始下一轮投掷骰子，否则计算结果
     currentPlayer = 0; // 重置当前玩家的索引为0
     if (roundCount < MAX_ROUNDS) {
         roundCount++; // 增加当前轮数
-        if(roundCount == 3){
-            multiplierSelect1.value = 0
-            multiplierSelect2.value = 0
-            multiplierSelect3.value = 0
-            multiplierSelect4.value = 0
-        }
         startRound();
     } else {
-        roundCount++; // 增加当前轮数
         lockButton.style.display = "none";
         calculate();
         showResult();
@@ -452,8 +501,52 @@ function confirmMultiplier() {
 
 // 切换到下一个玩家
 function switchPlayer() {
-    currentPlayer++; // 增加当前玩家的索引
+    // 更新骰子存储区域上的信息
+    if(players[currentPlayer].locked[0] == true){
+        var str1="<span>"+players[currentPlayer].dice[0]+"</span>";
+    }
+    else{
+        var str1='<span>?</span>';
+    }
+    if(players[currentPlayer].locked[1] == true){
+        var str2="<span>"+players[currentPlayer].dice[1]+"</span>";
+    }
+    else{
+        var str2='<span>?</span>';
+    }
+    if(players[currentPlayer].locked[2] == true){
+        var str3="<span>"+players[currentPlayer].dice[2]+"</span>";
+    }
+    else{
+        var str3='<span>?</span>';
+    }
+    if(players[currentPlayer].locked[3] == true){
+        var str4="<span>"+players[currentPlayer].dice[3]+"</span>";
+    }
+    else{
+        var str4='<span>?</span>';
+    }
+    if(players[currentPlayer].locked[4] == true){
+        var str5="<span>"+players[currentPlayer].dice[4]+"</span>";
+    }
+    else{
+        var str5='<span>?</span>';
+    }
 
+    if(currentPlayer == 0){
+        dives1.innerHTML = "<p>"+str1+str2+str3+str4+str5+"</p>";
+    }
+    if(currentPlayer == 1){
+        dives2.innerHTML = "<p>"+str1+str2+str3+str4+str5+"</p>";
+    }
+    if(currentPlayer == 2){
+        dives3.innerHTML = "<p>"+str1+str2+str3+str4+str5+"</p>";
+    }
+    if(currentPlayer == 3){
+        dives4.innerHTML = "<p>"+str1+str2+str3+str4+str5+"</p>";
+    }
+
+    currentPlayer++; // 增加当前玩家的索引
     // 如果当前玩家的索引等于玩家个数，说明一轮投掷结束了，未结束时更新UI并开启下一轮投掷
     if (currentPlayer !== playerCount) {
         updateUI();
@@ -486,7 +579,9 @@ function updateUI() {
     // 遍历每个骰子元素，根据骰子数组和锁定数组更新它们的内容和样式
     for (let i = 0; i < diceDiv.children.length; i++) {
         let diceElement = diceDiv.children[i];
-        diceElement.textContent = dice[i];
+        diceElement.innerHTML = arr[dice[i]-1];
+        console.log(dice)
+        //document.write(arr[dice[i]]);
         if (locked[i]) {
             diceElement.classList.add("locked");
             diceElement.classList.remove("selected");

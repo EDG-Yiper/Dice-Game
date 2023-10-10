@@ -5,35 +5,125 @@
     <title>掷骰子游戏</title>
     <!-- 引入css文件 -->
     <link rel="stylesheet" href="dice-game.css">
+    <link rel="stylesheet" href="button.css">
+    <link rel="stylesheet" href="button2.css">
+    <link rel="stylesheet" href="frame.css">
+    <link rel="stylesheet" href="input.css">
 </head>
 <body>
     <!-- 游戏开始界面 -->
     <div id="scene-startgame">
-        <p>这是初始界面</p >
-        <button id="rule">游戏规则介绍</button>
-        <button id="singlePlayers">单人玩家（电脑作战）</button>
-        <button id="twoPlayers">双人对战</button>
-        <button id="threePlayers">三人对战</button>
-        <button id="fourPlayers">四人对战</button>
-
+        <button id="rule" class="btn" type="button">
+            <strong>游戏规则</strong>
+            <div id="container-stars">
+              <div id="stars"></div>
+            </div>
+            <div id="glow">
+              <div class="circle"></div>
+              <div class="circle"></div>
+            </div>
+        </button>
+        <button id="singlePlayers" class="btn" type="button">
+            <strong>单人玩家（电脑作战）</strong>
+            <div id="container-stars">
+              <div id="stars"></div>
+            </div>
+            <div id="glow">
+              <div class="circle"></div>
+              <div class="circle"></div>
+            </div>
+        </button>
+        <button id="twoPlayers" class="btn" type="button">
+            <strong>双人对战</strong>
+            <div id="container-stars">
+              <div id="stars"></div>
+            </div>
+            <div id="glow">
+              <div class="circle"></div>
+              <div class="circle"></div>
+            </div>
+        </button>
+        <button id="threePlayers" class="btn" type="button">
+            <strong>三人对战</strong>
+            <div id="container-stars">
+              <div id="stars"></div>
+            </div>
+            <div id="glow">
+              <div class="circle"></div>
+              <div class="circle"></div>
+            </div>
+        </button>
+        <button id="fourPlayers" class="btn" type="button">
+            <strong>四人对战</strong>
+            <div id="container-stars">
+              <div id="stars"></div>
+            </div>
+            <div id="glow">
+              <div class="circle"></div>
+              <div class="circle"></div>
+            </div>
+        </button>
     </div>
     <!-- 规则介绍界面 -->
     <div id="scene-gamerule">
-        <p>这是游戏规则介绍</p >
-        <button id="understand">返回开始界面</button>
+        <div class="container">
+            <h1>游戏简介</h1>
+            <div class="section main" >
+                <h2>游戏背景介绍</h2>
+                <p>《孤注一掷》是由GDE德国队自主研发的一款全新开放世界运气游戏。游戏发生在一个被称作「web端」的幻想世界，在这里，被神选中的人将被授予「筹码」，导引运气之力‌​​​‌‌‌‌‌‌‌‌​​‌‌​‌‌‌​‌​。你将扮演一位名为「赌徒」的神秘角色，在自由的旅行中邂逅性格各异、能力独特的同伴们，和他们一起击败强敌，找回失散的筹码——同时，逐步发掘「赌神」的真相。</p >
+            </div>
+            <div class="section main" >
+                <h2>游戏规则介绍</h2>
+                <p>游戏规则如下：进入游戏，选择游戏模式后，设置游戏局数和玩家个人筹码数
+
+                    每一局游戏内有三轮投掷机会，玩家一人一次轮流投掷骰子，每个玩家有5个骰子
+                    
+                    前两次投掷骰子之后可以选择锁定0~5个骰子，锁定的骰子位于选定区域不再改变
+                    
+                    前两轮每轮投掷结束并在所有玩家锁定骰子后，每位玩家可以选择增加倍率：0，1，2，3。选择完成后进入下一轮。
+                    
+                    第三轮投掷结束后，所有玩家的全部骰子自动锁定并进行计分（得分为五个骰子的点数总和+奖励分），得出最终结果，筹码划分。
+
+                    分数最高的玩家从所有其它玩家手里赢得（二人分差的绝对值）*（总倍率）的筹码。
+
+                    N局游戏后，筹码最多的玩家获胜。
+                    
+                    如若中途有玩家筹码小于等于0，则该玩家被淘汰，游戏直接结束。
+                </p >
+            </div>
+            <div class="section main">
+                <h2>游戏奖励分设置</h2>
+                <p>其中奖励分设置如下：1.双对 （包括两对一样的骰子）：10分 
+                    2.三连（包括三个一样的骰子） ：10分
+                    3.葫芦（三个一样的骰子加一个对子）：20分
+                    4.四连（四个一样的骰子）： 40分 
+                    5.五连（五个一样的骰子） ：100分
+                    6.小顺子（四个数字连续的骰子）：30分
+                </p >
+            </div>
+        </div>
+        <button id="understand" >返回开始界面</button>
     </div>
     <!-- 游戏设置区域 -->
-    <div id="setting-div">
-        <label for="count-input">请输入游戏局数：</label>
-        <input id="count-input" type="number" min="1" value="1">
-        <br>
-        <label for="chips-input">请输入玩家筹码数：</label>
-        <input id="chips-input" type="number" min="1" value="100">
-        <br>
-        <button id="start-button">开始游戏</button>
+    <div id="setting-div" class="main">
+        <div class="form-control">
+            <input id ="count-input" type="value" required="" min="1" value="1">
+            <label for="count-input">
+                <span style="transition-delay:0ms">请</span><span style="transition-delay:50ms">输</span><span style="transition-delay:100ms">入</span><span style="transition-delay:150ms">游</span><span style="transition-delay:200ms">戏</span><span style="transition-delay:250ms">局</span><span style="transition-delay:300ms">数</span>
+            </label>
+        </div>
+        <div class="form-control">
+            <input id="chips-input" type="value" required="" min="1" value="100">
+            <label for="chips-input">
+                <span style="transition-delay:0ms">请</span><span style="transition-delay:50ms">输</span><span style="transition-delay:100ms">入</span><span style="transition-delay:150ms">玩</span><span style="transition-delay:200ms">家</span><span style="transition-delay:250ms">筹</span><span style="transition-delay:300ms">码</span><span style="transition-delay:350ms">数</span>
+            </label>
+        </div>
+        <button1 id="start-button" >
+            <span class="text">开始游戏</span>
+        </button1>
     </div>
     <!-- 游戏顶格基本信息区域 -->
-    <div id="topdata-div" style="display: none;">
+    <div id="topdata-div" style="display: none;" class="main">
         <!-- 当前局数 -->
         <div id="gamecount-div"></div>
         <!-- 当前轮数 -->
@@ -46,7 +136,7 @@
         <div id="Magnifications-div"></div>
     </div>
     <!-- 游戏区域 -->
-    <div id="game-div" style="display: none;">
+    <div id="game-div" style="display: none;" class="main" >
         <div id="Magnifications-div"></div>
         <!-- 当前玩家的骰子区域 -->
         <div id="dice-div">
@@ -58,9 +148,13 @@
             <span onclick="toggleSelect(this)"></span>
         </div>
         <!-- 投掷骰子按钮 -->
-        <button id="roll-button">投掷骰子</button>
+        <button1 id="roll-button" >
+            <span class="text">投掷骰子</span>
+        </button1>
         <!-- 锁定骰子按钮 -->
-        <button id="lock-button">锁定骰子</button>
+        <button1 id="lock-button" >
+            <span class="text">锁定骰子</span>
+        </button1>
         <!-- 下一位玩家按钮 -->
         <button id="next-button">下一位玩家</button>
         <!-- 确认倍率按钮 -->
@@ -69,7 +163,7 @@
 
     <!-- 玩家信息储存区域 -->
     
-    <div id="player-1" style="display: none;">
+    <div id="player-1" style="display: none;" class="main">
         <!-- 玩家1姓名 -->
         <div id="name1"></div>
         <!-- 玩家1筹码 -->
@@ -87,21 +181,22 @@
             <option value="2">2</option>
             <option value="3">3</option>
         </select>
+        <p id="aitext1" style="display: none;">超强大的AI正在选择倍率</p>
         <!-- 玩家1骰子结果储存区域 -->
         <div id="dives1"></div>
     </div>
 
-    <div id="player-2" style="display: none;">
-        <!-- 玩家1姓名 -->
+    <div id="player-2" style="display: none;" class="main">
+        <!-- 玩家2姓名 -->
         <div id="name2"></div>
-        <!-- 玩家1筹码 -->
+        <!-- 玩家2筹码 -->
         <div id="chips2"></div>
         <!-- 托管按钮 -->
         <button id="isai-button2" style="display: inline;">托管</button>
         <!-- 取消托管按钮 -->
         <button id="noai-button2" style="display: none;">取消托管</button>
         <!-- 倍率选择框 -->
-        <p>玩家一选择倍率：</p>
+        <p>玩家二选择倍率：</p>
         <select id="multiplier-select2" style="display: inline;">
             <option value="0">请选择倍率（默认为0）</option>
             <option value="0">0</option>
@@ -109,21 +204,22 @@
             <option value="2">2</option>
             <option value="3">3</option>
         </select>
-        <!-- 玩家1骰子结果储存区域 -->
+        <p id="aitext2" style="display: none;">超强大的AI正在选择倍率</p>
+        <!-- 玩家2骰子结果储存区域 -->
         <div id="dives2"></div>
     </div>
 
-    <div id="player-3" style="display: none;">
-        <!-- 玩家1姓名 -->
+    <div id="player-3" style="display: none;" class="main">
+        <!-- 玩家3姓名 -->
         <div id="name3"></div>
-        <!-- 玩家1筹码 -->
+        <!-- 玩家3筹码 -->
         <div id="chips3"></div>
         <!-- 托管按钮 -->
         <button id="isai-button3" style="display: inline;">托管</button>
         <!-- 取消托管按钮 -->
         <button id="noai-button3" style="display: none;">取消托管</button>
         <!-- 倍率选择框 -->
-        <p>玩家一选择倍率：</p>
+        <p>玩家三选择倍率：</p>
         <select id="multiplier-select3" style="display: inline;">
             <option value="0">请选择倍率（默认为0）</option>
             <option value="0">0</option>
@@ -131,21 +227,22 @@
             <option value="2">2</option>
             <option value="3">3</option>
         </select>
-        <!-- 玩家1骰子结果储存区域 -->
+        <p id="aitext3" style="display: none;">超强大的AI正在选择倍率</p>
+        <!-- 玩家3骰子结果储存区域 -->
         <div id="dives3"></div>
     </div>
 
-    <div id="player-4" style="display: none;">
-        <!-- 玩家1姓名 -->
+    <div id="player-4" style="display: none;" class="main">
+        <!-- 玩家4姓名 -->
         <div id="name4"></div>
-        <!-- 玩家1筹码 -->
+        <!-- 玩家4筹码 -->
         <div id="chips4"></div>
         <!-- 托管按钮 -->
         <button id="isai-button4" style="display: inline;">托管</button>
         <!-- 取消托管按钮 -->
         <button id="noai-button4" style="display: none;">取消托管</button>
         <!-- 倍率选择框 -->
-        <p>玩家一选择倍率：</p>
+        <p>玩家四选择倍率：</p>
         <select id="multiplier-select4" style="display: inline;">
             <option value="0">请选择倍率（默认为0）</option>
             <option value="0">0</option>
@@ -153,12 +250,13 @@
             <option value="2">2</option>
             <option value="3">3</option>
         </select>
-        <!-- 玩家1骰子结果储存区域 -->
+        <p id="aitext4" style="display: none;">超强大的AI正在选择倍率</p>
+        <!-- 玩家4骰子结果储存区域 -->
         <div id="dives4"></div>
     </div>
     
     <!-- 结果区域 -->
-    <div id="result-div" style="display: none;"></div>
+    <div id="result-div" style="display: none;" class="main"></div>
 
     <!-- 引入JavaScript文件 -->
     <script src="dice-game.js"></script>
