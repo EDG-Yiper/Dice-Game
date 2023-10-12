@@ -12,7 +12,7 @@ button1 {
   font-size: 18px;
   justify-content: center;
   line-height: 1em;
-  max-width: 10%;
+  width: 150px;
   padding: 3px;
   text-decoration: none;
   user-select: none;
@@ -28,7 +28,7 @@ button1 {
   outline: 0;
  }
  
- button1 span {
+ button1 span1 {
   background-color: rgb(5, 6, 45);
   padding: 16px 24px;
   border-radius: 6px;
@@ -37,7 +37,7 @@ button1 {
   transition: 300ms;
  }
  
- button1:hover span {
+ button1:hover span1 {
   background: none;
  }
  
